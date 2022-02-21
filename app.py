@@ -1,8 +1,6 @@
 import streamlit as st
 import custom_functions
 import pandas as pd
-#import clipboard
-import pyperclip
 from datetime import timedelta, date
 from PIL import Image
 from fpdf import FPDF
@@ -153,20 +151,11 @@ with step_3_section:
 - Gültigkeit: 10 Tage, bis spätestens {end_date_valid}
 """
             if sender.strip() != '':
-                html_str_2 = f"- Ihr Nutanix Ansprechpartner: {sender}"
-                html_str = html_str+html_str_2
+                html_str = html_str+f"- Ihr Nutanix Ansprechpartner: {sender}"
 
-            col_actions,col_preview = st.columns([1,4])
+            col_actions,col_preview = st.columns(2)
             with col_actions:
-                st.markdown("<h4 style='text-align: left; color:#034ea2;'>Aktionen:</h4>", unsafe_allow_html=True)
-                
-                if st.button('Text-Vorlage kopieren'):
-                    #clipboard.copy(html_str)
-                    pyperclip.copy(html_str)
-                    pyperclip.paste()
-                    #clipboard.paste()
-                    st.success("Erfolgreich kopiert")
-                st.write('---')
+                st.markdown("<h4 style='text-align: left; color:#034ea2;'>PDF Gutschein erstellen:</h4>", unsafe_allow_html=True)
 
                 pdf = FPDF(orientation="L", unit="mm", format=(250.12,420.16))#"A4")
                 pdf.set_margins(0,0,0)                
@@ -191,17 +180,23 @@ with step_3_section:
                     pdf.image("images/button.png",16,190,165,15,"PNG",f'{test_drive_link}')
                     pdf.set_font("Arial", "",16)
                     pdf.text(16,216, f'* Gültigkeit: 10 Tage, bis spätestens {str(end_date_valid)}')
+                st.image("images/preview.png")
                 file_download_name = user.split("@")[0]
                 st.download_button(
                     "PDF Gutschein erstellen",
                     data=pdf.output(dest='S').encode('latin-1'),
                     file_name=f"Nutanix Test Drive Gutschein - {file_download_name}.pdf",
                 )
+                st.info('Hinweis: Interessenten-Daten werden in die Vorlage automatisch eingefügt.')
 
             with col_preview:
-                st.markdown("<h4 style='text-align: left; color:#034ea2;'>Text-Vorlage:</h4>", unsafe_allow_html=True)
+                st.markdown("<h4 style='text-align: left; color:#034ea2;'>Text-Vorlage zur Ansicht:</h4>", unsafe_allow_html=True)
                 st.markdown(html_str, unsafe_allow_html=True)
-                st.info('**Wichtig:** Test Drive Zugangs-Link *nicht klicken*, Test Drive Zeitraum startet sofort ab Klick.')
+                st.warning('**Wichtig:** Test Drive Zugangs-Link *nicht klicken*, Test Drive Zeitraum startet sofort ab Klick.')
+                st.markdown("<h4 style='text-align: left; color:#034ea2;'>Text-Vorlage RAW zum Kopieren:</h4>", unsafe_allow_html=True)
+                st.code(html_str)
+                st.info('Hinweis: Kopier-Symbol / -Funktion erscheint bei "hover over" oben rechts im Feld.')
+                
 
     except Exception as e: 
         step_3_section.error("##### FEHLER: Die hochgeladene CSV Datei mit den Zugangs-Codes konnte leider nicht ausgelesen werden.")
