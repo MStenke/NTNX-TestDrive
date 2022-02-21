@@ -1,0 +1,3 @@
+streamlit==1.5.1
+clipboard==0.0.4
+fpdf==1.7.2
