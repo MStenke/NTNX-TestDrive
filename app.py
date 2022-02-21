@@ -1,7 +1,8 @@
 import streamlit as st
 import custom_functions
 import pandas as pd
-import clipboard
+#import clipboard
+import pyperclip
 from datetime import timedelta, date
 from PIL import Image
 from fpdf import FPDF
@@ -160,8 +161,10 @@ with step_3_section:
                 st.markdown("<h4 style='text-align: left; color:#034ea2;'>Aktionen:</h4>", unsafe_allow_html=True)
                 
                 if st.button('Text-Vorlage kopieren'):
-                    clipboard.copy(html_str)
-                    clipboard.paste()
+                    #clipboard.copy(html_str)
+                    pyperclip.copy(html_str)
+                    pyperclip.paste()
+                    #clipboard.paste()
                     st.success("Erfolgreich kopiert")
                 st.write('---')
 
